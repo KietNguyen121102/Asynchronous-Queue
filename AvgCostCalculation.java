@@ -1,5 +1,5 @@
 public class AvgCostCalculation {
-
+// This is for an even split of baristas
     public static double calculatingQueueCost(int queueSize, int lineSize, double numBarista, double alpha, double processingTime){
 
         double queueWaitingTime = 0;
