@@ -5,19 +5,21 @@ public class Main {
     public static void main(String[] args) {
 
         //Initializing the system
-        int numOnlineBarista = 2;
-        int numPhysicalBarista = 2;
-        double processingTime = 10;
+        int numOnlineBarista = 1;
+        int numPhysicalBarista = 1;
+        double processingTime = 3;
         int arrivalRate = 1;
-        double alpha = 0.7;
+        double alpha = 0.63;
+        int customers = 16;
+        
 
 
 
         HashMap<ArrayList<Integer>, ArrayList<Double>> costMatrix = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
-        int[] arr = new int[11];
+        int[] arr = new int[customers];
 
         BinaryString binaryString = new BinaryString();
-        binaryString.generateAllBinaryStrings(11, arr, 0);
+        binaryString.generateAllBinaryStrings(customers, arr, 0);
 
         ArrayList<int[]> combinations = binaryString.result;
         //Construcinng all strategies profile
@@ -42,7 +44,7 @@ public class Main {
             allQueueCost += alQueueCost.get(i);
         }
 
-        for (int customer = 10; customer >= 0; customer--) {
+        for (int customer = customers-1; customer >= 0; customer--) {
              HashMap<ArrayList<Integer>, ArrayList<Double>> toRemove = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
 
             for (Map.Entry<ArrayList<Integer>, ArrayList<Double>> waitingTime : costMatrix.entrySet()) {
@@ -68,6 +70,11 @@ public class Main {
                 //comparing two alternative nodes
 
                 ArrayList<Double> alternativeCost = costMatrix.get(alternativeStrategy);
+
+
+                if(strategy.equals(new ArrayList<>(Arrays.asList(1,1,1,1,1,1))))
+                {System.out.println("Alternative strategy of " + strategy + " is " + alternativeStrategy + " at customer " + customer +" with cost being " + costMatrix.get(strategy) + " and " + costMatrix.get(alternativeStrategy));
+            };
                 if(cost.get(customer) < alternativeCost.get(customer)){
                     toRemove.put(alternativeStrategy, alternativeCost);
                 }
@@ -98,18 +105,19 @@ public class Main {
         
 
 
-        // System.out.println("Current system has: ");
-        // System.out.println(numOnlineBarista + " online barista");
-        // System.out.println(numPhysicalBarista + " physical barista");
-        // System.out.println("Arrival rate is: " + arrivalRate + " per minute");
-        // System.out.println("Processing time is: " + processingTime + " minutes");
-        // System.out.println("Alpha is " + alpha);
+        System.out.println("Current system has: ");
+        System.out.println(numOnlineBarista + " online barista");
+        System.out.println(numPhysicalBarista + " physical barista");
+        System.out.println("Arrival rate is: " + arrivalRate + " per minute");
+        System.out.println("Processing time is: " + processingTime + " minutes");
+        System.out.println("Alpha is " + alpha);
+        System.out.println("SPNE is: " + SPEStrategy);
 
-        // System.out.println("All queue total cost in this case is: " + allQueueCost);
-        // System.out.println("SPNE total cost in this case is: " + SPEStrategyCost);
+        System.out.println("All queue total cost in this case is: " + allQueueCost);
+        System.out.println("SPNE total cost in this case is: " + SPEStrategyCost);
 
-        NashEquilibrium.NashEquilibriumFinder(2,2,10,1,0.9);
-
+        
+        // NashEquilibrium.NashEquilibriumFinder(6, numOnlineBarista,numPhysicalBarista,processingTime,arrivalRate,alpha,SPEStrategy);
        
 
 

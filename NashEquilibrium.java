@@ -4,17 +4,17 @@ import java.util.*;
 public class NashEquilibrium {
     
 
-    public static void NashEquilibriumFinder(int numOnlineBarista, int numPhysicalBarista, double processingTime, int arrivalRate, double alpha) {
-    
-
-
+    public static void NashEquilibriumFinder(int customer, int numOnlineBarista, int numPhysicalBarista, double processingTime, int arrivalRate, double alpha, ArrayList<Integer> SPNE) {
+        
+        
         HashMap<ArrayList<Integer>, ArrayList<Double>> costMatrix = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
-        int[] arr = new int[3];
+        int[] arr = new int[customer];
 
         BinaryString binaryString = new BinaryString();
-        binaryString.generateAllBinaryStrings(3, arr, 0);
+        binaryString.generateAllBinaryStrings(customer, arr, 0);
 
         ArrayList<int[]> combinations = binaryString.result;
+
         //Construcinng all strategies profile
         for (int[] decisions : combinations) {
             ArrayList<Double> currentCostMatrix = SchedulerSimulation.schedulerSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, decisions);
@@ -27,7 +27,7 @@ public class NashEquilibrium {
         }
 
         HashMap<ArrayList<Integer>, ArrayList<Double>> NashEquilibrium = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
-
+       
 
         for (Map.Entry<ArrayList<Integer>, ArrayList<Double>> waitingTime : costMatrix.entrySet()) {
                 ArrayList<Integer> strategy = waitingTime.getKey();
@@ -47,6 +47,17 @@ public class NashEquilibrium {
                     
                     if(costMatrix.get(singleDeviationStrategy).get(i) < costMatrix.get(strategy).get(i)){
                         isNash = false;
+                        if(strategy.equals(SPNE)){
+                            System.out.println(strategy + " is not a Nash equibrium when compared to " + singleDeviationStrategy + " at customer " + (i+1) + " because SPE cost is " + costMatrix.get(strategy) 
+                            + " while SDS cost is " + costMatrix.get(singleDeviationStrategy));
+                        }
+                        if(strategy.equals(new ArrayList<>(Arrays.asList(1,1,1,1,1,1)))){
+                            System.out.println(strategy + " is not a Nash equibrium when compared to " + singleDeviationStrategy + " at customer " + (i+1) + " because SPE cost is " + costMatrix.get(strategy) 
+                            + " while SDS cost is " + costMatrix.get(singleDeviationStrategy));
+
+                        }
+                    
+                        
                     };
                 }
 
@@ -57,7 +68,7 @@ public class NashEquilibrium {
 
 
             System.out.println(NashEquilibrium);
-            System.out.println(costMatrix.size());
+            System.out.println(combinations.size());
             
         }
     }
