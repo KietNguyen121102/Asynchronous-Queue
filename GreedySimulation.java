@@ -1,12 +1,16 @@
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.*;
 
 public class GreedySimulation {
 
-    public static void greedyCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha) {
+    public static ArrayList<Integer> greedyCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha) {
         // every minute in an 8-hour working day
+        ArrayList<Integer> greedyStrategy = new ArrayList<Integer>();
         int numCustomer = 0;
         int numCustomerServed = 0;
+        int totalCustomer = 11;
+        
 
         double[] onlineBarista = new double[onlineBaristas];
         for (int i = 0; i < onlineBaristas; i++) {
@@ -28,7 +32,7 @@ public class GreedySimulation {
         double totalTime = 0;
         double averageTime;
 
-        for (int time = 1; time <= 4800; time = time + 1) {
+        for (int time = 1; time <= 100; time = time + 1) {
             // System.out.println("At time t = " + time);
 
             Customer customer = new Customer(0);
@@ -50,17 +54,19 @@ public class GreedySimulation {
 
                 double queueWaitingTime = (float)(AvgCostCalculation.calculatingQueueCost(onlineQueue.size()+1, physicalLine.size(), onlineBaristas + physicalBaristas, alpha, processingTime)*(onlineQueue.size()+1) - AvgCostCalculation.calculatingQueueCost(onlineQueue.size(), physicalLine.size(), onlineBaristas + physicalBaristas, alpha, processingTime)*(onlineQueue.size()));
                 double lineWaitingTime = AvgCostCalculation.calculatingLineCost(onlineQueue.size(), physicalLine.size()+1, physicalBaristas + onlineBaristas, alpha, processingTime)*(physicalLine.size()+1) - AvgCostCalculation.calculatingLineCost(onlineQueue.size(), physicalLine.size(), onlineBaristas + physicalBaristas, alpha, processingTime)*(physicalLine.size());
-                if(onlineQueue.size() == 0){queueWaitingTime = 0;}
-                if(physicalLine.size() == 0){lineWaitingTime = 0;}
+                if(onlineQueue.size() == 0){queueWaitingTime = processingTime*alpha;}
+                if(physicalLine.size() == 0){lineWaitingTime = processingTime;}
                 
                 
                 // System.out.println("Online queue expected waiting time is: " + queueWaitingTime + ", physical line expected waiting time is: " + lineWaitingTime);
-                if (lineWaitingTime < queueWaitingTime) {
+                if (lineWaitingTime < queueWaitingTime && numCustomer < totalCustomer ) {
                     physicalLine.add(customer);
+                    greedyStrategy.add(0);
                     // System.out.println("Customer chooses physical line");
-                } else {
+                } else if(lineWaitingTime >= queueWaitingTime && numCustomer < totalCustomer){
                     onlineQueue.add(customer);
                     customer.beOnline();
+                    greedyStrategy.add(1);
                     // System.out.println("Customer chooses online queue");
                 }
             }
@@ -138,10 +144,8 @@ public class GreedySimulation {
         }
 
         averageTime = totalTime / (numCustomerServed);
-        System.out.println("Average time: " + averageTime/60 + " minutes");
-        System.out.println("Number of customer unserved:" + (numCustomer - numCustomerServed));
-        System.out.println("Number of customer served: " + numCustomerServed);
-        System.out.println("");
+        System.out.println("Greedy strategy total cost: " + totalTime);
+        return greedyStrategy;
     }
 
     public static void randomCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha) {
@@ -276,9 +280,7 @@ public class GreedySimulation {
         }
 
         averageTime = totalTime / (numCustomerServed);
-        System.out.println("Average time: " + averageTime/60 + " minutes");
-        System.out.println("Number of customer unserved:" + (numCustomer - numCustomerServed));
-        System.out.println("Number of customer served: " + numCustomerServed);
+        System.out.println("Total time: " + totalTime + " minutes");
         System.out.println("");
     }
 

@@ -7,15 +7,16 @@ public class Main {
         //Initializing the system
         int numOnlineBarista = 1;
         int numPhysicalBarista = 1;
-        double processingTime = 3;
+        double processingTime = 5;
         int arrivalRate = 1;
-        double alpha = 0.63;
-        int customers = 16;
+        double alpha = 0.1;
+        int customers = 10;
         
 
 
 
         HashMap<ArrayList<Integer>, ArrayList<Double>> costMatrix = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
+        HashMap<Integer, ArrayList<Double>> possibleCostOfEachCustomer = new HashMap<Integer, ArrayList<Double>>();
         int[] arr = new int[customers];
 
         BinaryString binaryString = new BinaryString();
@@ -32,6 +33,24 @@ public class Main {
             costMatrix.put(decision, currentCostMatrix);
 
         }
+
+
+        //Finding the possible costs of all customers
+        for(Map.Entry<ArrayList<Integer>, ArrayList<Double>> waitingTime : costMatrix.entrySet()){
+            ArrayList<Integer> listOfCustomer = waitingTime.getKey();
+            ArrayList<Double> lostOfCost = waitingTime.getValue();
+            for(int i = 0; i < listOfCustomer.size(); i++){
+                if(!possibleCostOfEachCustomer.containsKey(i)){
+                    possibleCostOfEachCustomer.put(i, new ArrayList<Double>());
+                }
+                else{
+                    if(!possibleCostOfEachCustomer.get(i).contains(lostOfCost.get(i))){
+                        possibleCostOfEachCustomer.get(i).add(lostOfCost.get(i));
+                    }
+                }
+            }
+        }
+
 
         // Finding the all-queue cost
         ArrayList<Integer> allQueueStrategy = new ArrayList<Integer>();
@@ -112,9 +131,15 @@ public class Main {
         System.out.println("Processing time is: " + processingTime + " minutes");
         System.out.println("Alpha is " + alpha);
         System.out.println("SPNE is: " + SPEStrategy);
+        System.out.println("SPNE cost of each customer is: " + costMatrix.get(SPEStrategy));
+        System.out.println("All queue cost of each customer is: " + alQueueCost);
 
         System.out.println("All queue total cost in this case is: " + allQueueCost);
         System.out.println("SPNE total cost in this case is: " + SPEStrategyCost);
+
+        System.out.println("Greedy strategy is: " + GreedySimulation.greedyCustomerInHybrid(1,1,processingTime,1,alpha));
+
+        // System.out.println("Possible cost for each customer: " + possibleCostOfEachCustomer);
 
         
         // NashEquilibrium.NashEquilibriumFinder(6, numOnlineBarista,numPhysicalBarista,processingTime,arrivalRate,alpha,SPEStrategy);
