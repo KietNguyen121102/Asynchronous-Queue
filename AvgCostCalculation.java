@@ -7,10 +7,10 @@ public class AvgCostCalculation {
        
 
         if(lineSize > queueSize){
-            queueWaitingTime = processingTime*alpha*((queueSize+1)/numBarista);
+            queueWaitingTime = (float) processingTime*alpha*((queueSize+1)/numBarista);
         } 
         else{
-            queueWaitingTime = processingTime*alpha*(1/(numBarista))*(2*(totalCustomer)-queueSize-(totalCustomer*(totalCustomer-1))/(2*queueSize));
+            queueWaitingTime = (float) processingTime*alpha*(1/(numBarista))*(2*(totalCustomer)-queueSize-(totalCustomer*(totalCustomer-1))/(2*queueSize));
         }
 
         return queueWaitingTime;
@@ -21,10 +21,10 @@ public class AvgCostCalculation {
         double totalCustomer = queueSize + lineSize;
 
         if(lineSize > queueSize){
-            lineWaitingTime = processingTime*(1/(numBarista))*(2*(totalCustomer)-lineSize-(totalCustomer*(totalCustomer-1))/(2*lineSize));      
+            lineWaitingTime = (float) processingTime*(1/(numBarista))*(2*(totalCustomer)-lineSize-(totalCustomer*(totalCustomer-1))/(2*lineSize));      
         }
         else{
-            lineWaitingTime = processingTime*(lineSize+1)/numBarista;
+            lineWaitingTime = (float) processingTime*(lineSize+1)/numBarista;
         }
 
         return lineWaitingTime;

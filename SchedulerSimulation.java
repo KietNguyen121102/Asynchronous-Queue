@@ -63,39 +63,7 @@ public class SchedulerSimulation {
                 }
             }
 
-            Customer servingCustomer2 = new Customer(0);
-
-            for (int num = 0; num < physicalBaristas; num++) {
-                if ((time >= physicalBarista[num]) && ((physicalLine.size() != 0) || (onlineQueue.size() != 0))) {
-                    if ((physicalLine.size() != 0)) {
-                        servingCustomer2 = physicalLine.peek();
-                        physicalLine.poll();
-                        numCustomerServed++;
-                    } else if (onlineQueue.size() != 0) {
-                        servingCustomer2 = onlineQueue.peek();
-                        onlineQueue.poll();
-                        numCustomerServed++;
-                    }
-
-                   
-                    physicalBarista[num] = (time + processingTime);
-                    servingCustomer2.setDepartureTime(physicalBarista[num]);
-                    if (servingCustomer2.online == true) {
-                        totalTime += (servingCustomer2.totalTime() * alpha);
-                        costMap.put(servingCustomer2.getArrivalTime(), servingCustomer2.totalTime() * alpha);
-                    } else {
-                        totalTime += servingCustomer2.totalTime();
-                        costMap.put(servingCustomer2.getArrivalTime(), servingCustomer2.totalTime());
-                    }
-
-                }
-
-            }
-
-
-          
-          
-           Customer servingCustomer = new Customer(0);
+            Customer servingCustomer = new Customer(0);
         
 
             for (int num = 0; num < onlineBaristas; num++) {
@@ -129,6 +97,40 @@ public class SchedulerSimulation {
                 }
 
             }
+
+            Customer servingCustomer2 = new Customer(0);
+
+            for (int num = 0; num < physicalBaristas; num++) {
+                if ((time >= physicalBarista[num]) && ((physicalLine.size() != 0) || (onlineQueue.size() != 0))) {
+                    if ((physicalLine.size() != 0)) {
+                        servingCustomer2 = physicalLine.peek();
+                        physicalLine.poll();
+                        numCustomerServed++;
+                    } else if (onlineQueue.size() != 0) {
+                        servingCustomer2 = onlineQueue.peek();
+                        onlineQueue.poll();
+                        numCustomerServed++;
+                    }
+
+                   
+                    physicalBarista[num] = (time + processingTime);
+                    servingCustomer2.setDepartureTime(physicalBarista[num]);
+                    if (servingCustomer2.online == true) {
+                        totalTime += (servingCustomer2.totalTime() * alpha);
+                        costMap.put(servingCustomer2.getArrivalTime(), servingCustomer2.totalTime() * alpha);
+                    } else {
+                        totalTime += servingCustomer2.totalTime();
+                        costMap.put(servingCustomer2.getArrivalTime(), servingCustomer2.totalTime());
+                    }
+
+                }
+
+            }
+
+
+          
+          
+           
 
             
         }
