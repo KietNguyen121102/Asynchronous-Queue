@@ -161,10 +161,10 @@ public class SPNEFinder {
         result.add(allQueueCost);
         result.add(SPEStrategyCost);
         result.add(GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers));
-        double random1 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
-        double random2 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
-        double random3 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
-        result.add((random1 + random2 + random3)/3);
+        // double random1 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        // double random2 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        // double random3 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        // result.add((random1 + random2 + random3)/3);
         result.add(allQueueCost/alpha);
 
         System.out.println("SPE cost is: " + SPECost);

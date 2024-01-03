@@ -33,7 +33,7 @@ public class GreedySimulation {
         double totalTime = 0;
         double averageTime;
 
-        for (int time = 1; time <= 100; time = time + 1) {
+        for (int time = 1; time <= 5000; time = time + 1) {
             // System.out.println("At time t = " + time);
 
             Customer customer = new Customer(0);
@@ -152,7 +152,7 @@ public class GreedySimulation {
         return totalTime;
     }
 
-    public static double randomCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers) {
+    public static double preferenceInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers, double physicalPopulation) {
         // every minute in an 8-hour working day
         int numCustomer = 0;
         int numCustomerServed = 0;
@@ -177,7 +177,7 @@ public class GreedySimulation {
         double totalTime = 0;
         double averageTime;
 
-        for (int time = 1; time <= 4800; time = time + 1) {
+        for (int time = 1; time <= 10000; time = time + 1) {
             // System.out.println("At time t = " + time);
 
             Customer customer = new Customer(0);
@@ -201,10 +201,10 @@ public class GreedySimulation {
                 
                 
                 // System.out.println("Online queue expected waiting time is: " + queueWaitingTime + ", physical line expected waiting time is: " + lineWaitingTime);
-                if (i < 0.5 && numCustomer < totalCustomers) {
+                if (i < physicalPopulation && numCustomer < totalCustomers) {
                     physicalLine.add(customer);
                     // System.out.println("Customer chooses physical line");
-                } else if(i >= 0.5 && numCustomer < totalCustomers) {
+                } else if(i >= physicalPopulation && numCustomer < totalCustomers) {
                     onlineQueue.add(customer);
                     customer.beOnline();
                     // System.out.println("Customer chooses online queue");
@@ -284,7 +284,7 @@ public class GreedySimulation {
 
         averageTime = totalTime / (numCustomerServed);
         //System.out.println("Total time: " + totalTime + " minutes");
-        return totalTime;
+        return averageTime;
     }
 
 
