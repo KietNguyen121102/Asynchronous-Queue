@@ -1,151 +1,122 @@
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Path;
 
 public class Main {
 
-    public static void main(String[] args) {
+    
+
+
+    
+
+    public static void main(String[] args) throws FileNotFoundException {
 
         //Initializing the system
-        int numOnlineBarista = 1;
-        int numPhysicalBarista = 1;
-        double processingTime = 5;
-        int arrivalRate = 1;
-        double alpha = 0.1;
-        int customers = 10;
+
+        List<String[]> inputIntoCSV = new ArrayList<String[]>();
+
+        Scanner scanner = new Scanner(System.in);
+                    // int numOnlineBarista = 5;
+     
+                    // int numPhysicalBarista = 5 - numOnlineBarista;
+        
+                    // double processingTime = 8;
+        
+                    // int arrivalRate = 1;
+        
+                    // double alphaValue = 0.75;
+                        
+                    // int cust = 500;
+
+                    // double totalCost = 0;
+                    // double greedyTotalCost = 0; 
+                    // // for(int j = 0; j < 1000; j++){
+                    //     greedyTotalCost += GreedySimulation.preferenceInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust, 0.3);
+                    //     totalCost += populationSimulation.populationSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust, 0, 0.3);
+                    // // }
+
+                    // greedyTotalCost = greedyTotalCost/1000;
+                    // totalCost = totalCost/1000;
+                    // System.out.println("Total cost is: " + totalCost + ",while greedy cost is: " + greedyTotalCost);
         
 
-
-
-        HashMap<ArrayList<Integer>, ArrayList<Double>> costMatrix = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
-        HashMap<Integer, ArrayList<Double>> possibleCostOfEachCustomer = new HashMap<Integer, ArrayList<Double>>();
-        int[] arr = new int[customers];
-
-        BinaryString binaryString = new BinaryString();
-        binaryString.generateAllBinaryStrings(customers, arr, 0);
-
-        ArrayList<int[]> combinations = binaryString.result;
-        //Construcinng all strategies profile
-        for (int[] decisions : combinations) {
-            ArrayList<Double> currentCostMatrix = SchedulerSimulation.schedulerSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, decisions);
-            ArrayList<Integer> decision = new ArrayList<Integer>();
-            for (int i = 0; i < decisions.length; i++) {
-                decision.add(decisions[i]);
-            }
-            costMatrix.put(decision, currentCostMatrix);
-
-        }
-
-
-        //Finding the possible costs of all customers
-        for(Map.Entry<ArrayList<Integer>, ArrayList<Double>> waitingTime : costMatrix.entrySet()){
-            ArrayList<Integer> listOfCustomer = waitingTime.getKey();
-            ArrayList<Double> lostOfCost = waitingTime.getValue();
-            for(int i = 0; i < listOfCustomer.size(); i++){
-                if(!possibleCostOfEachCustomer.containsKey(i)){
-                    possibleCostOfEachCustomer.put(i, new ArrayList<Double>());
-                }
-                else{
-                    if(!possibleCostOfEachCustomer.get(i).contains(lostOfCost.get(i))){
-                        possibleCostOfEachCustomer.get(i).add(lostOfCost.get(i));
-                    }
-                }
-            }
-        }
-
-
-        // Finding the all-queue cost
-        ArrayList<Integer> allQueueStrategy = new ArrayList<Integer>();
-        for(int i = 0; i < combinations.get(1).length; i++){
-            allQueueStrategy.add(1);
-        }
-        ArrayList<Double> alQueueCost = costMatrix.get(allQueueStrategy);
-        double allQueueCost = 0;
-        for(int i = 0; i < alQueueCost.size(); i ++){
-            allQueueCost += alQueueCost.get(i);
-        }
-
-        for (int customer = customers-1; customer >= 0; customer--) {
-             HashMap<ArrayList<Integer>, ArrayList<Double>> toRemove = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
-
-            for (Map.Entry<ArrayList<Integer>, ArrayList<Double>> waitingTime : costMatrix.entrySet()) {
-                ArrayList<Integer> strategy = waitingTime.getKey();
-                ArrayList<Double> cost = waitingTime.getValue();
-                ArrayList<Integer> alternativeStrategy = new ArrayList<Integer>();
-
-                //finding the alternative node
-
-               for(Map.Entry<ArrayList<Integer>, ArrayList<Double>> waitingTime2 : costMatrix.entrySet()){
-                    boolean potentialAlternative = true;
-                    for(int i = 0; i < customer; i++){
-                        if(waitingTime2.getKey().get(i) != strategy.get(i)){
-                            potentialAlternative = false;
-                        }
-                    }
-                    if(potentialAlternative == true && (!waitingTime2.getKey().equals(strategy))){
-                        alternativeStrategy = waitingTime2.getKey();                  
-                     }
-
-               }
-
-                //comparing two alternative nodes
-
-                ArrayList<Double> alternativeCost = costMatrix.get(alternativeStrategy);
-
-
-                if(strategy.equals(new ArrayList<>(Arrays.asList(1,1,1,1,1,1))))
-                {System.out.println("Alternative strategy of " + strategy + " is " + alternativeStrategy + " at customer " + customer +" with cost being " + costMatrix.get(strategy) + " and " + costMatrix.get(alternativeStrategy));
-            };
-                if(cost.get(customer) < alternativeCost.get(customer)){
-                    toRemove.put(alternativeStrategy, alternativeCost);
-                }
-                else{
-                    toRemove.put(strategy, cost);
-                }
-   
-            }
-
-            for (Map.Entry<ArrayList<Integer>, ArrayList<Double>> waitingTime : toRemove.entrySet()) {
-                costMatrix.remove(waitingTime.getKey(), waitingTime.getValue());
-            }
-
-            // System.out.println(costMatrix);
-            
-        }
-
-        // Finding the Subgame Perfect Equilibrium cost
-        ArrayList<Integer> SPEStrategy = new ArrayList<Integer>();
-        Map.Entry<ArrayList<Integer>, ArrayList<Double>> firstEntry = costMatrix.entrySet().iterator().next();
-        SPEStrategy = firstEntry.getKey();
-        ArrayList<Double> SPECost = costMatrix.get(SPEStrategy);
-        double SPEStrategyCost = 0;
-        for(int i = 0; i < SPECost.size(); i ++){
-            SPEStrategyCost += SPECost.get(i);
-        }
+  
 
         
-
-
-        System.out.println("Current system has: ");
-        System.out.println(numOnlineBarista + " online barista");
-        System.out.println(numPhysicalBarista + " physical barista");
-        System.out.println("Arrival rate is: " + arrivalRate + " per minute");
-        System.out.println("Processing time is: " + processingTime + " minutes");
-        System.out.println("Alpha is " + alpha);
-        System.out.println("SPNE is: " + SPEStrategy);
-        System.out.println("SPNE cost of each customer is: " + costMatrix.get(SPEStrategy));
-        System.out.println("All queue cost of each customer is: " + alQueueCost);
-
-        System.out.println("All queue total cost in this case is: " + allQueueCost);
-        System.out.println("SPNE total cost in this case is: " + SPEStrategyCost);
-
-        System.out.println("Greedy strategy is: " + GreedySimulation.greedyCustomerInHybrid(1,1,processingTime,1,alpha));
-
-        // System.out.println("Possible cost for each customer: " + possibleCostOfEachCustomer);
-
+        for(int numOnlineBarista = 5;  numOnlineBarista >= 0; numOnlineBarista--){
+                for(double physicalPop = 0; physicalPop <= 1; physicalPop = physicalPop + 0.1){
+                    for(double onlinePop = 0; onlinePop <= 1; onlinePop = onlinePop + 0.1){
+                  
+                    if(physicalPop + onlinePop > 1){continue;}
+                    // int numOnlineBarista = 1;
+     
+                    int numPhysicalBarista = 5 - numOnlineBarista;
         
-        // NashEquilibrium.NashEquilibriumFinder(6, numOnlineBarista,numPhysicalBarista,processingTime,arrivalRate,alpha,SPEStrategy);
+                    double processingTime = 8;
+        
+                    int arrivalRate = 1;
+        
+                    double alphaValue = 0.25;
+                        
+                    int cust = 500;
+
        
+                    // double testGreedy = GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, cust);
 
+
+                    // ArrayList<String> header = new ArrayList<String>(Arrays.asList("OnlineBarista", "PhysicalBarista", "ProcessingTime", "ArrivalRate", "Alpha", "NumOfCustomers", "AllQueueCost", "SPEStrategyCost", "GreedyCost", "Random", "AllLine"));
+                    // System.out.println(header);
+                    // ArrayList<Double> answer = SPNEFinder.CostAnalysis(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, cust);
+                    String[] data = new String[11];
+                     // for(int j = 0; j < answer.size();j++){data[j] = answer.get(j).toString();}
+                    System.out.println(data);
+
+                    double totalCost = 0;
+                    double testCost = populationSimulation.populationSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust, 0, 0.1);
+                    System.out.println(testCost);
+
+                    ArrayList<Double> totalCostArray = new ArrayList<Double>();
+                    for(int j = 0; j < 1000; j++){
+                        // totalCost += GreedySimulation.preferenceInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust, physicalPopulation);
+                        double currentCost = populationSimulation.populationSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust, physicalPop, onlinePop);
+                        totalCost += currentCost;
+                        totalCostArray.add(currentCost);
+                        // totalCostArray.add(GreedySimulation.preferenceInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust, physicalPopulation));
+
+                    }
+                    totalCost = totalCost/1000;
+                    System.out.println(totalCost);
+                    // System.out.println(totalCostArray);
+
+                    //ArrayList<Double> preferenceAnswer = new ArrayList<Double>(Arrays.asList((double) numOnlineBarista, (double)numPhysicalBarista, processingTime, (double) arrivalRate, alphaValue, physicalPopulation, totalCost));
+                    
+                    ArrayList<Double> populationAnswer = new ArrayList<Double>(Arrays.asList((double) numOnlineBarista, (double)numPhysicalBarista, processingTime, (double) arrivalRate, alphaValue, physicalPop, onlinePop, 1 - onlinePop - physicalPop, totalCost));
+
+
+       
+        
+                    try(FileWriter f = new FileWriter("populationData" + alphaValue + ".txt", true); 
+                    BufferedWriter b = new BufferedWriter(f); 
+                    PrintWriter p = new PrintWriter(b);) {
+                    p.println(populationAnswer);
+                    System.out.println("Add sucessfully");
+                }
+                    catch (IOException i){
+                    i.printStackTrace();
+                }
+
+
+
+        }}}
+    }
 
     }
-}
+
+
+
+
 // }

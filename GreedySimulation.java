@@ -4,12 +4,13 @@ import java.util.*;
 
 public class GreedySimulation {
 
-    public static ArrayList<Integer> greedyCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha) {
+    public static double greedyCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers) {
         // every minute in an 8-hour working day
         ArrayList<Integer> greedyStrategy = new ArrayList<Integer>();
+        double[] costOfGreedy = new double[20];
         int numCustomer = 0;
         int numCustomerServed = 0;
-        int totalCustomer = 11;
+        int totalCustomer = totalCustomers;
         
 
         double[] onlineBarista = new double[onlineBaristas];
@@ -32,7 +33,7 @@ public class GreedySimulation {
         double totalTime = 0;
         double averageTime;
 
-        for (int time = 1; time <= 100; time = time + 1) {
+        for (int time = 1; time <= 5000; time = time + 1) {
             // System.out.println("At time t = " + time);
 
             Customer customer = new Customer(0);
@@ -52,18 +53,18 @@ public class GreedySimulation {
                 // System.out.println("Customer waiting in queue is " + onlineQueue.size());
                 // System.out.println("Customer waiting in physical line is " + physicalLine.size());
 
-                double queueWaitingTime = (float)(AvgCostCalculation.calculatingQueueCost(onlineQueue.size()+1, physicalLine.size(), onlineBaristas + physicalBaristas, alpha, processingTime)*(onlineQueue.size()+1) - AvgCostCalculation.calculatingQueueCost(onlineQueue.size(), physicalLine.size(), onlineBaristas + physicalBaristas, alpha, processingTime)*(onlineQueue.size()));
-                double lineWaitingTime = AvgCostCalculation.calculatingLineCost(onlineQueue.size(), physicalLine.size()+1, physicalBaristas + onlineBaristas, alpha, processingTime)*(physicalLine.size()+1) - AvgCostCalculation.calculatingLineCost(onlineQueue.size(), physicalLine.size(), onlineBaristas + physicalBaristas, alpha, processingTime)*(physicalLine.size());
+                double queueWaitingTime = (float)(AvgCostCalculation.calculatingQueueCost(onlineQueue.size(), physicalLine.size(), onlineBaristas, physicalBaristas, alpha, processingTime));
+                double lineWaitingTime = (float) AvgCostCalculation.calculatingLineCost(onlineQueue.size(), physicalLine.size(), onlineBaristas, physicalBaristas, alpha, processingTime);
                 if(onlineQueue.size() == 0){queueWaitingTime = processingTime*alpha;}
                 if(physicalLine.size() == 0){lineWaitingTime = processingTime;}
                 
                 
                 // System.out.println("Online queue expected waiting time is: " + queueWaitingTime + ", physical line expected waiting time is: " + lineWaitingTime);
-                if (lineWaitingTime < queueWaitingTime && numCustomer < totalCustomer ) {
+                if (lineWaitingTime < queueWaitingTime && numCustomer <= totalCustomer ) {
                     physicalLine.add(customer);
                     greedyStrategy.add(0);
                     // System.out.println("Customer chooses physical line");
-                } else if(lineWaitingTime >= queueWaitingTime && numCustomer < totalCustomer){
+                } else if(lineWaitingTime >= queueWaitingTime && numCustomer <= totalCustomer){
                     onlineQueue.add(customer);
                     customer.beOnline();
                     greedyStrategy.add(1);
@@ -103,6 +104,8 @@ public class GreedySimulation {
                         totalTime += servingCustomer.totalTime();
                     }
 
+                    costOfGreedy[(int) (servingCustomer.arrivalTime - 1)] = servingCustomer.totalTime();
+
                 }
 
             }
@@ -137,6 +140,7 @@ public class GreedySimulation {
                     } else {
                         totalTime += servingCustomer2.totalTime();
                     }
+                    costOfGreedy[(int) (servingCustomer2.arrivalTime - 1)] = servingCustomer2.totalTime();
 
                 }
 
@@ -144,11 +148,11 @@ public class GreedySimulation {
         }
 
         averageTime = totalTime / (numCustomerServed);
-        System.out.println("Greedy strategy total cost: " + totalTime);
-        return greedyStrategy;
+        // System.out.println("Greedy strategy total cost: " + totalTime);
+        return totalTime;
     }
 
-    public static void randomCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha) {
+    public static double preferenceInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers, double physicalPopulation) {
         // every minute in an 8-hour working day
         int numCustomer = 0;
         int numCustomerServed = 0;
@@ -173,7 +177,7 @@ public class GreedySimulation {
         double totalTime = 0;
         double averageTime;
 
-        for (int time = 1; time <= 4800; time = time + 1) {
+        for (int time = 1; time <= 10000; time = time + 1) {
             // System.out.println("At time t = " + time);
 
             Customer customer = new Customer(0);
@@ -197,10 +201,10 @@ public class GreedySimulation {
                 
                 
                 // System.out.println("Online queue expected waiting time is: " + queueWaitingTime + ", physical line expected waiting time is: " + lineWaitingTime);
-                if (i < 0.5) {
+                if (i < physicalPopulation && numCustomer < totalCustomers) {
                     physicalLine.add(customer);
                     // System.out.println("Customer chooses physical line");
-                } else {
+                } else if(i >= physicalPopulation && numCustomer < totalCustomers) {
                     onlineQueue.add(customer);
                     customer.beOnline();
                     // System.out.println("Customer chooses online queue");
@@ -244,8 +248,6 @@ public class GreedySimulation {
             }
 
             Customer servingCustomer2 = new Customer(0);
-        
-
            
 
             for (int num = 0; num < physicalBaristas; num++) {
@@ -273,6 +275,7 @@ public class GreedySimulation {
                     } else {
                         totalTime += servingCustomer2.totalTime();
                     }
+                    
 
                 }
 
@@ -280,8 +283,8 @@ public class GreedySimulation {
         }
 
         averageTime = totalTime / (numCustomerServed);
-        System.out.println("Total time: " + totalTime + " minutes");
-        System.out.println("");
+        //System.out.println("Total time: " + totalTime + " minutes");
+        return averageTime;
     }
 
 
