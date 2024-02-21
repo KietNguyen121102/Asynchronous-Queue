@@ -4,7 +4,7 @@ import java.util.*;
 
 public class populationSimulation {
     
-    public static double populationSimulation(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers, double physicalPopulation, double onlinePopulation){
+    public static double populationSimulation(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers, double physicalPopulation, double onlinePopulation, int totalCustomer){
          // every minute in an 8-hour working day
         int numCustomer = 0;
         int numPhysicalCustomerServed = 0;
@@ -40,7 +40,7 @@ public class populationSimulation {
             // Customer arrives at a fixed interval
             timeToNextCust++;
             // System.out.println("Time to next customer is:" + timeToNextCust);
-            if (timeToNextCust == customerArrivalRate) {
+            if (timeToNextCust == customerArrivalRate && numCustomer <= totalCustomer) {
                 customer.setArrivalTime(time);
                 timeToNextCust = 0;
                 numCustomer++;

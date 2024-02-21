@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -6,15 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SPNEFinder {   
 
-    public static ArrayList<Double> CostAnalysis(int numOnlineBarista, int numPhysicalBarista, double processingTime, int arrivalRate, double alpha, int customers){
+    public static void CostAnalysis(int numOnlineBarista, int numPhysicalBarista, double processingTime, int arrivalRate, double alpha, int customers){
 
-        ArrayList<Double> result = new ArrayList<Double>();
-        result.add((double)numOnlineBarista); 
-        result.add((double)numPhysicalBarista);
-        result.add(processingTime);
-        result.add((double)arrivalRate);
-        result.add(alpha);
-        result.add((double) customers);
+      
         
 
 
@@ -29,16 +27,7 @@ public class SPNEFinder {
         ArrayList<int[]> combinations = new ArrayList<int[]>();
 
         for(int[] decision: allPossibleDecisions){
-            boolean eligible = true;
-            int count = 0;
-            for(int i = 0; i < decision.length; i++){
-                if(decision[i] == 0){
-                    count++;
-                }
-                else{count =0;}
-                if(count == 2){eligible = false;}
-            }
-            if(eligible == true){combinations.add(decision);}
+            {combinations.add(decision);}
         }
 
         //Construcinng all strategies profile
@@ -157,19 +146,51 @@ public class SPNEFinder {
             SPEStrategyCost += SPECost.get(i);
         }
 
-        
-        result.add(allQueueCost);
-        result.add(SPEStrategyCost);
-        result.add(GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers));
-        // double random1 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
-        // double random2 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
-        // double random3 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
-        // result.add((random1 + random2 + random3)/3);
-        result.add(allQueueCost/alpha);
+        ArrayList<Double> greedyCost = GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        ArrayList<Double> pessGreedyCost = GreedySimulation.pessGreedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        System.out.println(greedyCost);
 
-        System.out.println("SPE cost is: " + SPECost);
+        // for(int i = 0; i < customers; i++){
+        //     ArrayList<Double> result = new ArrayList<Double>();
+        //     result.add((double)numOnlineBarista); 
+        //     result.add((double)numPhysicalBarista);
+        //     result.add(processingTime);
+        //     result.add((double)arrivalRate);
+        //     result.add(alpha);
+        //     result.add((double) customers);
+        //     result.add((double)i+1);
+        //     result.add(alQueueCost.get(i));
+        //     result.add(SPECost.get(i)); 
+        //     result.add(greedyCost.get(i));
+        //     result.add(pessGreedyCost.get(i));
+        //     result.add(alQueueCost.get(i)/alpha);
 
-        return result; 
+        //     try(FileWriter f = new FileWriter("costData" + alpha + ".txt", true); 
+        //             BufferedWriter b = new BufferedWriter(f); 
+        //             PrintWriter p = new PrintWriter(b);) {
+        //             p.println(result);
+        //             System.out.println("Add sucessfully");
+        //     }
+        //             catch (IOException e){
+        //             e.printStackTrace();
+        //     }
+
+
+
+
+
+        // // double random1 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        // // double random2 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        // // double random3 = GreedySimulation.randomCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        // // result.add((random1 + random2 + random3)/3);
+        // // result.add(allQueueCost/alpha);
+
+
+        // }
+       
+        System.out.println("SPE strategy is: " + SPEStrategy);
+
+        return; 
 
 
         
