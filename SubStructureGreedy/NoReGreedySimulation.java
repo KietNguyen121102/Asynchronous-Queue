@@ -2,16 +2,15 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.*;
 
-public class GreedySimulation {
+public class NoReGreedySimulation {
 
-    public static Integer greedyCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers) {
+    public static double NoReGreedy(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers) {
         // every minute in an 8-hour working day
 
         ArrayList<Integer> greedyStrategy = new ArrayList<Integer>();
         double[] costOfGreedy = new double[totalCustomers];
         int numCustomer = 0;
         int numCustomerServed = 0;
-        boolean equal = false;
         
 
 
@@ -75,24 +74,11 @@ public class GreedySimulation {
                 
                 // System.out.println("Online queue expected waiting time is: " + queueWaitingTime + ", physical line expected waiting time is: " + lineWaitingTime);
                 if (lineWaitingTime < queueWaitingTime && numCustomer <= totalCustomer ) {
-                    if(equal == true){
-                        System.out.println("Choose line after ties at custoer: " + customer.getArrivalTime());
-                        equal = false;
-                    }
                     physicalLine.add(customer);
                     greedyStrategy.add(0);
 
                     // System.out.println("Customer chooses physical line");
                 } else if(numCustomer <= totalCustomer){
-                    if(equal == true){
-                        System.out.println("Choose queue after ties at customer: " + customer.getArrivalTime());
-                        equal = false;
-                    }
-                    
-                    if(lineWaitingTime == queueWaitingTime){
-                        equal = true;
-                    }
-                    
                     onlineQueue.add(customer);
                     customer.beOnline();
                     greedyStrategy.add(1);
@@ -114,11 +100,7 @@ public class GreedySimulation {
                         servingCustomer = onlineQueue.peek();
                         onlineQueue.poll();
                         numCustomerServed++;
-                    } else if (physicalLine.size() != 0) {
-                        servingCustomer = physicalLine.peek();
-                        physicalLine.poll();
-                        numCustomerServed++;
-                    }
+                    } 
 
                     // System.out.println("Breakpoint 2");
 
@@ -150,11 +132,7 @@ public class GreedySimulation {
                         servingCustomer2 = physicalLine.peek();
                         physicalLine.poll();
                         numCustomerServed++;
-                    } else if (onlineQueue.size() != 0) {
-                        servingCustomer2 = onlineQueue.peek();
-                        onlineQueue.poll();
-                        numCustomerServed++;
-                    }
+                    } 
 
                     // System.out.println("Breakpoint 2");
 
@@ -193,7 +171,7 @@ public class GreedySimulation {
         for(int i = 0; i < costOfGreedy.length; i++){
             greedyCost.add(costOfGreedy[i]);
         }
-        return chooseQueue;
+        return totalTime;
 
         // averageTime = totalTime / (numCustomerServed);
         // System.out.println("Greedy strategy is:     " + greedyStrategy);

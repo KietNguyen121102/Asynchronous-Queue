@@ -4,14 +4,15 @@ import java.util.*;
 
 public class GreedySimulation {
 
-    public static Integer greedyCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers) {
+    public static double greedyCustomerInHybrid(int onlineBaristas, int physicalBaristas, double processingTime, int ArrivalRate, double alpha, int totalCustomers) {
         // every minute in an 8-hour working day
+
+        
 
         ArrayList<Integer> greedyStrategy = new ArrayList<Integer>();
         double[] costOfGreedy = new double[totalCustomers];
         int numCustomer = 0;
         int numCustomerServed = 0;
-        boolean equal = false;
         
 
 
@@ -75,24 +76,12 @@ public class GreedySimulation {
                 
                 // System.out.println("Online queue expected waiting time is: " + queueWaitingTime + ", physical line expected waiting time is: " + lineWaitingTime);
                 if (lineWaitingTime < queueWaitingTime && numCustomer <= totalCustomer ) {
-                    if(equal == true){
-                        System.out.println("Choose line after ties at custoer: " + customer.getArrivalTime());
-                        equal = false;
-                    }
                     physicalLine.add(customer);
                     greedyStrategy.add(0);
 
                     // System.out.println("Customer chooses physical line");
-                } else if(numCustomer <= totalCustomer){
-                    if(equal == true){
-                        System.out.println("Choose queue after ties at customer: " + customer.getArrivalTime());
-                        equal = false;
-                    }
-                    
-                    if(lineWaitingTime == queueWaitingTime){
-                        equal = true;
-                    }
-                    
+                } 
+                else if(numCustomer <= totalCustomer){
                     onlineQueue.add(customer);
                     customer.beOnline();
                     greedyStrategy.add(1);
@@ -181,19 +170,20 @@ public class GreedySimulation {
         }
 
        
-        // System.out.println("Cost of greedy is: " + totalTime);
+        System.out.println("Cost of optimistic greedy is: " + totalTime);
         // HashMap<String, ArrayList<Integer>> map = new HashMap();
         // map.put("queueSize", queueSize);
         // map.put("lineSize", lineSize);
-        System.out.println("Optimistic greedy queue chosen is:" + chooseQueue);
-        System.out.println("Greedy strategy total cost: " + totalTime);
+        // System.out.println("Optimistic greedy queue chosen is:" + chooseQueue);
+        // System.out.println("Greedy strategy total cost: " + totalTime);
 
-        System.out.println(costOfGreedy.length);
+        // System.out.println(costOfGreedy.length);
         ArrayList<Double> greedyCost = new ArrayList<Double>();
         for(int i = 0; i < costOfGreedy.length; i++){
             greedyCost.add(costOfGreedy[i]);
         }
-        return chooseQueue;
+        System.out.println("Optimistic greedy: " + greedyStrategy);
+        return totalTime;
 
         // averageTime = totalTime / (numCustomerServed);
         // System.out.println("Greedy strategy is:     " + greedyStrategy);
@@ -361,14 +351,16 @@ public class GreedySimulation {
         // map.put("queueSize", queueSize);
         // map.put("lineSize", lineSize);
 
-        System.out.println("Pessimistic queue chosen is: " + chooseQueue);
+        // System.out.println("Pessimistic queue chosen is: " + chooseQueue);
 
-        System.out.println("Pessimistic greedy strategy total cost: " + totalTime);
+        System.out.println("The cost of pessimistic greedy is: " + totalTime);
 
         ArrayList<Double> greedyCost =  new ArrayList<Double>();
         for(int i = 0; i < totalCustomer; i++){
             greedyCost.add(costOfGreedy[i]);
         }
+
+        System.out.println("Pessimistic greedy: " + greedyStrategy);
 
         return totalTime;
 

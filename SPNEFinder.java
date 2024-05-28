@@ -12,10 +12,6 @@ public class SPNEFinder {
 
     public static void CostAnalysis(int numOnlineBarista, int numPhysicalBarista, double processingTime, int arrivalRate, double alpha, int customers){
 
-      
-        
-
-
         ConcurrentHashMap<ArrayList<Integer>, ArrayList<Double>> costMatrix = new ConcurrentHashMap<ArrayList<Integer>, ArrayList<Double>>();
         HashMap<Integer, ArrayList<Double>> possibleCostOfEachCustomer = new HashMap<Integer, ArrayList<Double>>();
         int[] arr = new int[customers];
@@ -32,7 +28,7 @@ public class SPNEFinder {
 
         //Construcinng all strategies profile
         for (int[] decisions : combinations) {
-            ArrayList<Double> currentCostMatrix = SchedulerSimulation.schedulerSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, decisions);
+            ArrayList<Double> currentCostMatrix = noReSchedulerSimulation.schedulerSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, decisions);
             ArrayList<Integer> decision = new ArrayList<Integer>();
             for (int i = 0; i < decisions.length; i++) {
                 decision.add(decisions[i]);
@@ -146,9 +142,46 @@ public class SPNEFinder {
             SPEStrategyCost += SPECost.get(i);
         }
 
-        ArrayList<Double> greedyCost = GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
-        ArrayList<Double> pessGreedyCost = GreedySimulation.pessGreedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers+1);
+        double greedyCost = GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers);
+        double pessGreedyCost = GreedySimulation.pessGreedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, customers);
         System.out.println(greedyCost);
+
+
+
+        //Calculate cumulative cost for each strategy
+ 
+
+
+       
+
+    
+            ArrayList<Double> result = new ArrayList<Double>();
+            
+            result.add((double)numOnlineBarista); 
+            result.add((double)numPhysicalBarista);
+            result.add(processingTime);
+            result.add((double)arrivalRate);
+            result.add(alpha);
+            result.add((double) customers);
+        
+            result.add(allQueueCost);
+            result.add(SPEStrategyCost); 
+            result.add(greedyCost);
+            result.add(pessGreedyCost);
+            result.add(allQueueCost/alpha);
+
+            try(FileWriter f = new FileWriter("OverTimeCostData" + alpha + ".txt", true); 
+                    BufferedWriter b = new BufferedWriter(f); 
+                    PrintWriter p = new PrintWriter(b);) {
+                    p.println(result);
+                    System.out.println("Add sucessfully");
+            }
+                    catch (IOException e){
+                    e.printStackTrace();
+            }
+        
+
+
 
         // for(int i = 0; i < customers; i++){
         //     ArrayList<Double> result = new ArrayList<Double>();

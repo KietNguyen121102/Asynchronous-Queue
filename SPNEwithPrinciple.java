@@ -30,7 +30,7 @@ class SPNEwithPrinciple{
 
         //Construcinng all strategies profile
         for (int[] decisions : combinations) {
-            ArrayList<Double> currentCostMatrix = SchedulerSimulation.schedulerSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, decisions);
+            ArrayList<Double> currentCostMatrix = noReSchedulerSimulation.schedulerSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, decisions);
             ArrayList<Integer> decision = new ArrayList<Integer>();
             for (int i = 0; i < decisions.length; i++) {
                 decision.add(decisions[i]);

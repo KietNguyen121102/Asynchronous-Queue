@@ -8,11 +8,6 @@ import java.nio.file.Path;
 
 public class Main {
 
-    
-
-
-    
-
     public static void main(String[] args) throws FileNotFoundException {
 
         //Initializing the system
@@ -20,13 +15,6 @@ public class Main {
         List<String[]> inputIntoCSV = new ArrayList<String[]>();
 
         Scanner scanner = new Scanner(System.in);
-
-        ArrayList<Double> greedyCost = GreedySimulation.greedyCustomerInHybrid(3, 2, 8, 1, 0.9, 1000);
-        ArrayList<Double> pessGreedyCost = GreedySimulation.pessGreedyCustomerInHybrid(3, 2, 8, 1, 0.9, 1000);
-
-        // ArrayList<Integer> SPNE =  SPNEFinder.CostAnalysis(1, 1, 6, 1, 0.85, 15);
-        // SlotSimulation.slotSimulation(1,1,3,1,0.9,SPNE);
-        // System.out.println(SPNE);
 
     //Structural Greedy
         // Map<String, ArrayList<Integer>> result = GreedySimulation.greedyCustomerInHybrid(2, 2, 6, 1, 0.75, 100);
@@ -64,92 +52,86 @@ public class Main {
         
 
     //SPNE vs Greedy
-        // for(double alphaValue = 0; alphaValue < 1; alphaValue = alphaValue + 0.1){
-            // int numOnlineBarista = 1;
-     
-            // int numPhysicalBarista = 1;
+        for(double alphaValue = 0.1; alphaValue <= 0.9; alphaValue = alphaValue + 0.2){
+           
+                for(int numOnlineBarista = 0; numOnlineBarista <= 5; numOnlineBarista++){
+            
+            
+            int cust = 500;
+            int numPhysicalBarista = 5 - numOnlineBarista;
         
-            // double processingTime = 3;
+            double processingTime = 8;
         
-            // int arrivalRate = 1;
+            int arrivalRate = 1;
                         
-            // int cust = 100;
-
-            // double alphaValue = 0.25;
-
             
     //Greedy experiment
-        //     ArrayList<Double> costComparisonAnswer = SPNEFinder.CostAnalysis(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust);
 
-            // Map<String, ArrayList<Double>> result = GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust);
-        
-            // try(FileWriter f = new FileWriter("greedyExpectedCostData.txt", true); 
+            double greedyChoice = GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust);
+            // double pessGreedyCost = GreedySimulation.pessGreedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust);
+
+            // ArrayList<Double> result = new ArrayList<Double>();
+
+            // result.add((double)numOnlineBarista); 
+            // result.add((double)numPhysicalBarista);
+            // result.add(processingTime);
+            // result.add((double)arrivalRate);
+            // result.add(alphaValue);
+            // result.add((double) cust);
+            // result.add(greedyChoice);
+
+            // int totalBarista = numOnlineBarista + numPhysicalBarista;
+            // double m = Math.floor(cust/totalBarista);
+
+            // double allQueueCost = alphaValue*processingTime + (alphaValue/cust)*(processingTime-totalBarista*arrivalRate)*((m/2)*(totalBarista*(m-1)+2*(cust%totalBarista)));
+
+            // result.add(allQueueCost);
+            // result.add(greedyCost/cust);
+            // result.add(pessGreedyCost/cust);
+            // result.add((allQueueCost/alphaValue));
+
+            // try(FileWriter f = new FileWriter("GreedyChoice" + alphaValue +".txt", true); 
             // BufferedWriter b = new BufferedWriter(f); 
             // PrintWriter p = new PrintWriter(b);) {
-            //     p.println(result.get("queueExpectedCost"));
-            //     p.println(result.get("lineExpectedCost"));
+            //     p.println(result);
             //     System.out.println("Add sucessfully");
             // }
             // catch (IOException i){
             //     i.printStackTrace();
             // }
-
         
+    }
+}
         // }
 
   
 
     //Greedy Population vs Fixed Population    
         // for(int numOnlineBarista = 5;  numOnlineBarista >= 0; numOnlineBarista--){
-        //     for(double alpha = 0.1; alpha <= 0.9; alpha = alpha + 0.1){
-                    
+        //     for(double alpha = 0.1; alpha <= 0.9; alpha = alpha + 0.2){
+               
                   
         //             // if(physicalPop + onlinePop > 1){continue;}
         //             // int numOnlineBarista = 1;
-     
+                    
         //             int numPhysicalBarista = 5 - numOnlineBarista;
         
         //             double processingTime = 8;
         
         //             int arrivalRate = 1;
-                        
-        //             int cust = 15;
-
        
+        //             int cust = 16;
         //             // double testGreedy = GreedySimulation.greedyCustomerInHybrid(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, cust);
-
-
-        //             // ArrayList<String> header = new ArrayList<String>(Arrays.asList("OnlineBarista", "PhysicalBarista", "ProcessingTime", "ArrivalRate", "Alpha", "NumOfCustomers", "AllQueueCost", "SPEStrategyCost", "GreedyCost", "Random", "AllLine"));
-        //             // System.out.println(header);
         //             SPNEFinder.CostAnalysis(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alpha, cust);
-        //             String[] data = new String[10];
-        //              // for(int j = 0; j < answer.size();j++){data[j] = answer.get(j).toString();}
-        //             System.out.println(data);
-
-        //             double totalCost = 0;
-                    // double testCost = populationSimulation.populationSimulation(numOnlineBarista, numPhysicalBarista, processingTime, arrivalRate, alphaValue, cust, 0, 0.1);
-                    // System.out.println(testCost);
-                    //ArrayList<Double> preferenceAnswer = new ArrayList<Double>(Arrays.asList((double) numOnlineBarista, (double)numPhysicalBarista, processingTime, (double) arrivalRate, alphaValue, physicalPopulation, totalCost));
-
-       
-        
-                //     try(FileWriter f = new FileWriter("populationData" + alpha + ".txt", true); 
-                //     BufferedWriter b = new BufferedWriter(f); 
-                //     PrintWriter p = new PrintWriter(b);) {
-                //     // p.println(populationAnswer);
-                //     System.out.println("Add sucessfully");
-                // }
-                //     catch (IOException i){
-                //     i.printStackTrace();
-                // }
 
 
-
-        }
+        // }}
+    
 
     // }}
 
-}
+        }}
+    
 
 
 
